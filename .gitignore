@@ -259,3 +259,4 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+/WuFFolderWatcherTrayApp/20190311_Urlaubsantrag.pdf
