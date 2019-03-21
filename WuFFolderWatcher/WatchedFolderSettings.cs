@@ -31,6 +31,12 @@ namespace WuFFolderWatcher
         /// <summary>If TRUE: the folder and its subfolders will be monitored</summary>
         [XmlElement]
         public bool FolderIncludeSub { get; set; }
+        /// <summary>If TRUE: the file events will be watched for </summary>
+        [XmlElement]
+        public bool EntityFile { get; set; }
+        /// <summary>If TRUE: the folder events will be watched for </summary>
+        [XmlElement]
+        public bool EntityFolder { get; set; }
         /// <summary>Specifies the command or action to be executed
         /// after an event has raised</summary>
         [XmlElement]

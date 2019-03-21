@@ -59,6 +59,8 @@ namespace WuFFolderWatcher
             {
                 this.textBoxFolderPath.Text = settings.FolderPath;
                 this.checkBoxDeleteFile.Checked = settings.EventDeletedFiles;
+                this.radButFiles.Checked = settings.EntityFile;
+                this.radButFolders.Checked = settings.EntityFolder;
                 this.checkBoxNewFiles.Checked = settings.EventNewFiles;
                 this.checkBoxModifyFiles.Checked = settings.EventModifiedFiles;
                 this.checkBoxRenameFiles.Checked = settings.EventRenamedFiles;
@@ -71,6 +73,8 @@ namespace WuFFolderWatcher
             {
                 this.textBoxFolderPath.Text = string.Empty;
                 this.checkBoxDeleteFile.Checked = false;
+                this.radButFiles.Checked = false;
+                this.radButFolders.Checked = false;
                 this.checkBoxNewFiles.Checked = false;
                 this.checkBoxModifyFiles.Checked = false;
                 this.checkBoxRenameFiles.Checked = false;
@@ -88,6 +92,8 @@ namespace WuFFolderWatcher
             {
                 settings.FolderPath = this.textBoxFolderPath.Text;
                 settings.EventDeletedFiles = this.checkBoxDeleteFile.Checked;
+                settings.EntityFile = this.radButFiles.Checked;
+                settings.EntityFolder = this.radButFolders.Checked;
                 settings.EventNewFiles = this.checkBoxNewFiles.Checked;
                 settings.EventModifiedFiles = this.checkBoxModifyFiles.Checked;
                 settings.EventRenamedFiles = this.checkBoxRenameFiles.Checked;

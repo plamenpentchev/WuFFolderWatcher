@@ -61,6 +61,9 @@
             this.buttonStartService = new System.Windows.Forms.Button();
             this.checkBoxLogErrorOnly = new System.Windows.Forms.CheckBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.label7 = new System.Windows.Forms.Label();
+            this.radButFiles = new System.Windows.Forms.RadioButton();
+            this.radButFolders = new System.Windows.Forms.RadioButton();
             this.groupBoxWatchFolders.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridWatchedFolders)).BeginInit();
             this.groupBoxEventsAndOptions.SuspendLayout();
@@ -123,6 +126,9 @@
             // 
             // groupBoxEventsAndOptions
             // 
+            this.groupBoxEventsAndOptions.Controls.Add(this.radButFolders);
+            this.groupBoxEventsAndOptions.Controls.Add(this.radButFiles);
+            this.groupBoxEventsAndOptions.Controls.Add(this.label7);
             this.groupBoxEventsAndOptions.Controls.Add(this.checkBoxIncludeSubFolders);
             this.groupBoxEventsAndOptions.Controls.Add(this.label2);
             this.groupBoxEventsAndOptions.Controls.Add(this.checkBoxRenameFiles);
@@ -132,7 +138,7 @@
             this.groupBoxEventsAndOptions.Controls.Add(this.label1);
             this.groupBoxEventsAndOptions.Location = new System.Drawing.Point(460, 71);
             this.groupBoxEventsAndOptions.Name = "groupBoxEventsAndOptions";
-            this.groupBoxEventsAndOptions.Size = new System.Drawing.Size(317, 172);
+            this.groupBoxEventsAndOptions.Size = new System.Drawing.Size(317, 163);
             this.groupBoxEventsAndOptions.TabIndex = 1;
             this.groupBoxEventsAndOptions.TabStop = false;
             this.groupBoxEventsAndOptions.Text = "Events and Options";
@@ -161,7 +167,7 @@
             // checkBoxRenameFiles
             // 
             this.checkBoxRenameFiles.AutoSize = true;
-            this.checkBoxRenameFiles.Location = new System.Drawing.Point(79, 63);
+            this.checkBoxRenameFiles.Location = new System.Drawing.Point(79, 102);
             this.checkBoxRenameFiles.Name = "checkBoxRenameFiles";
             this.checkBoxRenameFiles.Size = new System.Drawing.Size(96, 17);
             this.checkBoxRenameFiles.TabIndex = 4;
@@ -172,7 +178,7 @@
             // checkBoxDeleteFile
             // 
             this.checkBoxDeleteFile.AutoSize = true;
-            this.checkBoxDeleteFile.Location = new System.Drawing.Point(191, 63);
+            this.checkBoxDeleteFile.Location = new System.Drawing.Point(191, 102);
             this.checkBoxDeleteFile.Name = "checkBoxDeleteFile";
             this.checkBoxDeleteFile.Size = new System.Drawing.Size(87, 17);
             this.checkBoxDeleteFile.TabIndex = 3;
@@ -184,7 +190,7 @@
             // checkBoxModifyFiles
             // 
             this.checkBoxModifyFiles.AutoSize = true;
-            this.checkBoxModifyFiles.Location = new System.Drawing.Point(190, 28);
+            this.checkBoxModifyFiles.Location = new System.Drawing.Point(190, 67);
             this.checkBoxModifyFiles.Name = "checkBoxModifyFiles";
             this.checkBoxModifyFiles.Size = new System.Drawing.Size(90, 17);
             this.checkBoxModifyFiles.TabIndex = 2;
@@ -196,7 +202,7 @@
             // checkBoxNewFiles
             // 
             this.checkBoxNewFiles.AutoSize = true;
-            this.checkBoxNewFiles.Location = new System.Drawing.Point(79, 28);
+            this.checkBoxNewFiles.Location = new System.Drawing.Point(79, 67);
             this.checkBoxNewFiles.Name = "checkBoxNewFiles";
             this.checkBoxNewFiles.Size = new System.Drawing.Size(72, 17);
             this.checkBoxNewFiles.TabIndex = 1;
@@ -207,7 +213,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(14, 28);
+            this.label1.Location = new System.Drawing.Point(14, 67);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(46, 13);
             this.label1.TabIndex = 0;
@@ -378,6 +384,37 @@
             this.checkBoxLogErrorOnly.UseVisualStyleBackColor = true;
             this.checkBoxLogErrorOnly.CheckedChanged += new System.EventHandler(this.checkBoxLogErrorOnly_CheckedChanged);
             // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(17, 20);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(47, 13);
+            this.label7.TabIndex = 7;
+            this.label7.Text = "Entitties:";
+            // 
+            // radButFiles
+            // 
+            this.radButFiles.AutoSize = true;
+            this.radButFiles.Location = new System.Drawing.Point(79, 20);
+            this.radButFiles.Name = "radButFiles";
+            this.radButFiles.Size = new System.Drawing.Size(46, 17);
+            this.radButFiles.TabIndex = 8;
+            this.radButFiles.TabStop = true;
+            this.radButFiles.Text = "Files";
+            this.radButFiles.UseVisualStyleBackColor = true;
+            // 
+            // radButFolders
+            // 
+            this.radButFolders.AutoSize = true;
+            this.radButFolders.Location = new System.Drawing.Point(190, 18);
+            this.radButFolders.Name = "radButFolders";
+            this.radButFolders.Size = new System.Drawing.Size(54, 17);
+            this.radButFolders.TabIndex = 9;
+            this.radButFolders.TabStop = true;
+            this.radButFolders.Text = "Folder";
+            this.radButFolders.UseVisualStyleBackColor = true;
+            // 
             // ConfigForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -447,5 +484,8 @@
         private System.Windows.Forms.Button buttonStartService;
         private System.Windows.Forms.CheckBox checkBoxLogErrorOnly;
         private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.RadioButton radButFolders;
+        private System.Windows.Forms.RadioButton radButFiles;
+        private System.Windows.Forms.Label label7;
     }
 }

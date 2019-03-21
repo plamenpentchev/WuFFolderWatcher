@@ -164,12 +164,23 @@ namespace WuFFolderWatcher
                     StringBuilder actionToExecute = new StringBuilder(
                       watchedFolder.ExecutableFile);
                     // List of arguments
-                    StringBuilder actionArguments = new StringBuilder(
-                      watchedFolder.ExecutableArguments);
+                    StringBuilder actionArguments = new StringBuilder( watchedFolder.ExecutableArguments);
+                    
+
                     // Subscribe to notify filters
-                    fileSWatch.NotifyFilter =   NotifyFilters.LastAccess | 
-                                                NotifyFilters.LastWrite | 
+                    Log.Information(String.Format("FILES ({0}) FOLDERS ({1})", watchedFolder.EntityFile.ToString(), watchedFolder.EntityFolder.ToString()));
+                    if (watchedFolder.EntityFile)
+                    {
+                        // Record a log entry into Windows Event Log
+                        fileSWatch.NotifyFilter = NotifyFilters.LastAccess |
+                                                NotifyFilters.LastWrite |
                                                 NotifyFilters.FileName;
+                    }
+                    else
+                    {
+                        fileSWatch.NotifyFilter = NotifyFilters.DirectoryName;
+                    }
+                    
 
                     
                     //fileSWatch.NotifyFilter = NotifyFilters.DirectoryName;
@@ -182,10 +193,20 @@ namespace WuFFolderWatcher
                         //fileSWatch.Created += (senderObj, fileSysArgs) =>
                         //       fileSWatch_Created(senderObj, fileSysArgs,
                         //             actionToExecute.ToString(), actionArguments.ToString());
-
+                        
+               
                         Observable.FromEventPattern<FileSystemEventArgs>(fileSWatch, "Created")
                                         .Select(e => e)
-                                        .Where(e => File.Exists(e.EventArgs.FullPath))
+                                        .Where(e => {
+                                            if (watchedFolder.EntityFile)
+                                            {
+                                                return File.Exists(e.EventArgs.FullPath);
+                                            }
+                                            else
+                                            {
+                                                return Directory.Exists(e.EventArgs.FullPath);
+                                            }
+                                        } )
                                        .Subscribe(
                                            (pattern) =>
                                                    fileSWatch_Created(pattern.Sender, pattern.EventArgs, actionToExecute.ToString(), actionArguments.ToString())
@@ -292,11 +313,11 @@ namespace WuFFolderWatcher
                 return;
             }
 
-            Log.Information(String.Format("New file ({0}) in folder ({1})", e.FullPath, Directory.GetParent(e.FullPath).FullName));
+            Log.Information(String.Format("New entity ({0}) in folder ({1})", e.FullPath, Directory.GetParent(e.FullPath).FullName) );
             string fileName = e.FullPath;
             
             // Adds the file name to the arguments. The filename will be placed in lieu of {0}
-            string newStr = string.Format(action_Args, fileName);
+            string newStr = string.Format(action_Args, fileName, "CREATED", "");
             // Executes the command from the DOS window
             if (!string.IsNullOrEmpty(action_Exec))
             {
@@ -318,10 +339,10 @@ namespace WuFFolderWatcher
             }
 
             this.lastWrite = File.GetLastWriteTime(e.FullPath);
-            Log.Information(String.Format("Renamed file ({0}) in folder ({1}). ({2})", e.FullPath, Directory.GetParent(e.FullPath).FullName, sender.GetType().Name));
+            Log.Information(String.Format("Renamed ({0}) in folder ({1}). Old name({2})", e.FullPath, Directory.GetParent(e.FullPath).FullName, e.OldName));
             string fileName = e.FullPath;
             // Adds the file name to the arguments. The filename will be placed in lieu of {0}
-            string newStr = string.Format(action_Args, fileName);
+            string newStr = string.Format(action_Args, fileName, "RENAMED", e.OldName);
             // Executes the command from the DOS window
             if (!string.IsNullOrEmpty(action_Exec))
             {
@@ -342,10 +363,10 @@ namespace WuFFolderWatcher
                 return;
             }
 
-            Log.Information(String.Format("Deleted file ({0}) in folder ({1})", e.FullPath, Directory.GetParent(e.FullPath).FullName));
+            Log.Information(String.Format("Deleted entity ({0}) in folder ({1})", e.FullPath, Directory.GetParent(e.FullPath).FullName));
             string fileName = e.FullPath;
             // Adds the file name to the arguments. The filename will be placed in lieu of {0}
-            string newStr = string.Format(action_Args, fileName);
+            string newStr = string.Format(action_Args, fileName, "DELETED", "");
             // Executes the command from the DOS window
             if (!string.IsNullOrEmpty(action_Exec))
             {

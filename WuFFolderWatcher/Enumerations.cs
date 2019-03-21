@@ -7,6 +7,16 @@ using System.ComponentModel;
 
 namespace WuFFolderWatcher
 {
+
+    enum ENTITY
+    {
+        [Description("NONE")]
+        NONE,
+        [Description("FILE")]
+        FILE,
+        [Description("FOLDER")]
+        FOLDER
+    }
     enum UPDATE_CONFIG_OPTIONS
     {
         ADD_CONFIG_VALUE,
