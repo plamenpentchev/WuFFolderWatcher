@@ -8,7 +8,7 @@ using System.ComponentModel;
 namespace WuFFolderWatcher
 {
 
-    enum ENTITY
+    public enum ENTITY
     {
         [Description("NONE")]
         NONE,
@@ -17,13 +17,25 @@ namespace WuFFolderWatcher
         [Description("FOLDER")]
         FOLDER
     }
-    enum UPDATE_CONFIG_OPTIONS
+    public enum UPDATE_CONFIG_OPTIONS
     {
         ADD_CONFIG_VALUE,
         UPDATE_CONFIG_VALUE
     }
 
-    enum APP_SETTINGS_KEYS
+    public enum FS_EVENT
+    {
+        [Description("CREATED")]
+        CREATED,
+        [Description("MODIFIED")]
+        MODIFIED,
+        [Description("DELETED")]
+        DELETED,
+        [Description("RENAMED")]
+        RENAMED
+    }
+
+    public enum APP_SETTINGS_KEYS
     {
         [Description("newFiles")]
         NEW_FILES,

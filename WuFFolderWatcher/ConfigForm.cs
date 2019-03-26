@@ -37,7 +37,7 @@ namespace WuFFolderWatcher
             this.servState = WuFFolderWatcher.GetServiceStatus();
             this.label6.Text = this.servState.GetDescription<SERVICE_STATES>();
             
-            this.buttonStartService.Enabled = servState == SERVICE_STATES.STATE_STOPPED ? true: false;
+            //this.buttonStartService.Enabled = servState == SERVICE_STATES.STATE_STOPPED ? true: false;
             this.logErrorsOnly = ConfigurationManager.AppSettings["logErrorsOnly"];
 
             this.checkBoxLogErrorOnly.Checked = logErrorsOnly == "True" ? true : false;
@@ -68,6 +68,12 @@ namespace WuFFolderWatcher
                 this.textBoxFileFilters.Text = settings.FolderFilter;
                 this.textBoxExecutable.Text = settings.ExecutableFile;
                 this.textBoxExecutableArguments.Text = settings.ExecutableArguments;
+                this.cbRunAsync.Checked = settings.RunAsync;
+                this.tbGroupIntervalTime.Text = settings.ThreadGroupInterval.ToString();
+                this.cbThreadCount.Text = settings.ThreadCount.ToString();
+                this.tbBaseURL.Text = settings.BaseURL;
+                this.tbPOSTParameter.Text = settings.POSTParam;
+                this.groupSynchronisation.Enabled = this.cbRunAsync.Checked;
             }
             else
             {
@@ -82,6 +88,10 @@ namespace WuFFolderWatcher
                 this.textBoxFileFilters.Text = string.Empty;
                 this.textBoxExecutable.Text = string.Empty;
                 this.textBoxExecutableArguments.Text = string.Empty;
+                this.cbRunAsync.Checked = false;
+                this.tbGroupIntervalTime.Text = string.Empty;
+                this.tbBaseURL.Text = string.Empty;
+                this.tbPOSTParameter.Text = string.Empty;
             }
             
         }
@@ -101,6 +111,12 @@ namespace WuFFolderWatcher
                 settings.FolderFilter = this.textBoxFileFilters.Text;
                 settings.ExecutableFile = this.textBoxExecutable.Text;
                 settings.ExecutableArguments = this.textBoxExecutableArguments.Text;
+                settings.RunAsync = this.cbRunAsync.Checked;
+                settings.ThreadGroupInterval = this.tbGroupIntervalTime.Text;
+                settings.ThreadCount = this.cbThreadCount.Text;
+                settings.BaseURL = this.tbBaseURL.Text;
+                settings.POSTParam = this.tbPOSTParameter.Text;
+                this.groupSynchronisation.Enabled = this.cbRunAsync.Checked;
                 if (this.selectedIdx >= 0 && this.selectedIdx < this.dataGridWatchedFolders.Rows.Count)
                 {
                     settings.FolderID = this.dataGridWatchedFolders.Rows[this.selectedIdx].Cells[0].Value?.ToString();
@@ -384,7 +400,7 @@ namespace WuFFolderWatcher
 
         private void buttonStartService_Click(object sender, EventArgs e)
         {
-            this.buttonStartService.Enabled = !WuFFolderWatcher.StartService();
+           // this.buttonStartService.Enabled = !WuFFolderWatcher.StartService();
             
         }
 
@@ -396,5 +412,38 @@ namespace WuFFolderWatcher
         private  bool IsAdministrator =>
            new WindowsPrincipal(WindowsIdentity.GetCurrent())
                .IsInRole(WindowsBuiltInRole.Administrator);
+
+        private void cbRunAsync_CheckedChanged(object sender, EventArgs e)
+        {
+            CheckBox cb = sender as CheckBox;
+            if (null != cb)
+            {
+                this.groupSynchronisation.Enabled = cb.Checked;
+            }
+        }
+
+        private void radButFiles_CheckedChanged(object sender, EventArgs e)
+        {
+            RadioButton rb = sender as RadioButton;
+            if (null != rb)
+            {
+                this.checkBoxNewFiles.Enabled = rb.Checked;
+                this.checkBoxRenameFiles.Enabled =  rb.Checked;
+                this.checkBoxModifyFiles.Enabled = rb.Checked;
+                this.checkBoxDeleteFile.Enabled = rb.Checked;
+            }
+        }
+
+        private void radButFolders_CheckedChanged(object sender, EventArgs e)
+        {
+            RadioButton rb = sender as RadioButton;
+            if (null != rb)
+            {
+                this.checkBoxNewFiles.Enabled = rb.Checked;
+                this.checkBoxRenameFiles.Enabled = rb.Checked;
+                this.checkBoxModifyFiles.Enabled = !rb.Checked;
+                this.checkBoxDeleteFile.Enabled = rb.Checked;
+            }
+        }
     }
 }

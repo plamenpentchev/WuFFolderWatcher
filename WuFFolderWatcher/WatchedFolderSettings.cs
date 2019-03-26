@@ -9,6 +9,7 @@ namespace WuFFolderWatcher
 {
     public class WatchedFolderSettings
     {
+        public int Index { get; set; }
         /// <summary>Unique identifier of the combination File type/folder.
         /// Arbitrary number (for instance 001, 002, and so on)</summary>
         [XmlAttribute]
@@ -56,6 +57,21 @@ namespace WuFFolderWatcher
         // <summary>Specifies if newly renamed files should be considered</summary>
         [XmlElement]
         public bool EventRenamedFiles { get; set; }
+        /// <summary>If TRUE: the proces will be started asynchronously </summary>
+        [XmlElement]
+        public bool RunAsync { get; set; }
+        /// <summary>If set the thread groups will be run in thi interval
+        [XmlElement]
+        public string ThreadGroupInterval { get; set; }
+        /// <summary>If set the asynchronously started process will be waited for so much milliseconds to exit</summary>
+        [XmlElement]
+        public string ThreadCount { get; set; }
+        /// <summary>If set a Web API will be informed about the event.</summary>
+        [XmlElement]
+        public string BaseURL { get; set; }
+        /// <summary>JSON object that will be posted to the Web endpoint.</summary>
+        [XmlElement]
+        public string POSTParam { get; set; }
         /// <summary>Default constructor of the class</summary>       
         public WatchedFolderSettings()
         {
