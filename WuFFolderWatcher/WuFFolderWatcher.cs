@@ -575,8 +575,15 @@ namespace WuFFolderWatcher
                 Log.Information($"PARAM {POSTParam}");
                 object cnvrtd = JsonConvert.DeserializeObject(JsonConvert.ToString(POSTParam)) ;
 
+
+
                 using (var client = new WebClient())
                 {
+                    //CredentialCache myCache = new CredentialCache();
+                    //myCache.Add(new Uri(baseURL), "NTLM", new NetworkCredential("windream", "wd@dm1n+", "zenit.local"));
+                    //client.Credentials = myCache;
+
+                    client.UseDefaultCredentials = true;
                     client.Headers.Add(HttpRequestHeader.ContentType, "application/json");
                     //client.Headers.Add(HttpRequestHeader.Authorization, "Basic WmVuaXQubG9jYWxcV2luZHJlYW06d2RAZG0xbis=");
                     if (!waitForExit)

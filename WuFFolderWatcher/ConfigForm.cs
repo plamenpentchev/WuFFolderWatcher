@@ -70,8 +70,8 @@ namespace WuFFolderWatcher
                 this.textBoxExecutableArguments.Text = settings.ExecutableArguments;
                 this.cbRunAsync.Checked = settings.RunAsync;
                 this.cbWaitToReturn.Checked = settings.WaitForExit;
-                this.tbGroupIntervalTime.Text = settings.ThreadGroupInterval.ToString();
-                this.cbThreadCount.Text = settings.ThreadCount.ToString();
+                this.tbGroupIntervalTime.Text = !string.IsNullOrEmpty(settings.ThreadGroupInterval) ? settings.ThreadGroupInterval: "" ;
+                this.cbThreadCount.Text = !string.IsNullOrEmpty(settings.ThreadCount)? settings.ThreadCount : "";
                 this.tbBaseURL.Text = settings.BaseURL;
                 this.tbPOSTParameter.Text = settings.POSTParam;
                 this.groupSynchronisation.Enabled = this.cbRunAsync.Checked;
@@ -259,6 +259,36 @@ namespace WuFFolderWatcher
             }
         }
 
+
+        private void butAddWatchFolder_Click_OLD(object sender, EventArgs e)
+        {
+            using (var fbd = new FolderBrowserDialog())
+            {
+                DialogResult result = fbd.ShowDialog();
+
+                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
+                {
+                    var newFolder = new WatchedFolderSettings();
+                    newFolder.FolderPath = fbd.SelectedPath;
+                    watchedFoldersSettings.Add(newFolder);
+
+                    var x = from w in watchedFoldersSettings
+                            select new WatchedFolderDataGridView(w);
+
+                    this.bindList = new BindingList<WatchedFolderDataGridView>(x.ToList());
+
+                    this.dataGridWatchedFolders.DataSource = bindList; // x.ToList();
+                    this.dataGridWatchedFolders.Update();
+                    this.dataGridWatchedFolders.Refresh();
+                    this.dataGridWatchedFolders.ClearSelection();
+                    this.dataGridWatchedFolders.Rows[this.dataGridWatchedFolders.Rows.Count - 1].Selected = true;
+                    DataGridViewCell cell = this.dataGridWatchedFolders.Rows[this.dataGridWatchedFolders.Rows.Count - 1].Cells[0];
+                    this.dataGridWatchedFolders.CurrentCell = cell;
+                    this.dataGridWatchedFolders.BeginEdit(true);
+                    this.LoadCurrentSettingsToGUI(newFolder);
+                }
+            }
+        }
         private void buttonCancel_Click(object sender, EventArgs e)
         {
             this.Close();
