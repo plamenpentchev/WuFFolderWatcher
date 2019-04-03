@@ -17,8 +17,10 @@ using Serilog;
 using System.Reactive.Linq;
 using System.Reactive;
 using System.Text.RegularExpressions;
+using System.Net;
 using System.Web;
-using Newtonsoft;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace WuFFolderWatcher
 {
@@ -27,7 +29,7 @@ namespace WuFFolderWatcher
         private List<FileSystemWatcher> listFileSystemWatcher;
         private List<BufferBlock<CommandInfo>> _listAsyncCommands;
         private List<WatchedFolderSettings> listFolders;
-        private static int _counter = 0;
+        private static long _counter = 0;
         private DateTime lastWrite = DateTime.MinValue;
         private string filters = "";
 
@@ -91,6 +93,7 @@ namespace WuFFolderWatcher
             Log.Information($"Wacth folders (enabled) count [{this.listFolders.FindAll( e => e.FolderEnabled).ToList().Count}]");
             // Start the file system watcher for each of the file specification
             // and folders found on the List<>
+             //StartFileSystemWatcherAsync();
              StartFileSystemWatcher();
             Log.Information($"Folder watcher started: {this.listFileSystemWatcher.Count}");
 
@@ -146,7 +149,8 @@ namespace WuFFolderWatcher
 
         /// <summary>Start the file system watcher for each of the file
         /// specification and folders found on the List<>/// </summary>
-        private void StartFileSystemWatcher()
+        //private async void StartFileSystemWatcherAsync()
+        private  void StartFileSystemWatcher()
         {
             // Creates a new instance of the list
             this.listFileSystemWatcher = new List<FileSystemWatcher>();
@@ -213,7 +217,6 @@ namespace WuFFolderWatcher
                         
                
                         Observable.FromEventPattern<FileSystemEventArgs>(fileSWatch, "Created")
-                                        .Select(e => e)
                                         .Where(e => {
                                             if (watchedFolder.EntityFile)
                                             {
@@ -295,9 +298,17 @@ namespace WuFFolderWatcher
                         
                         for (int i = 0; i < Convert.ToInt32(watchedFolder.ThreadCount); i++)
                         {
-                            //... consume commands
+                            //... consume commands with N consumer, N producer
                             this.Consumer(watchedFolder,  idx);
+                           // await Task.Delay(100);
                         }
+                    }
+                    else
+                    {
+                        //... consume commands with 1 consumer, N producer
+                        watchedFolder.ThreadCount = "1";
+                        watchedFolder.ThreadGroupInterval = "100";
+                        this.Consumer(watchedFolder, idx);
                     }
                     idx++;
 
@@ -316,14 +327,15 @@ namespace WuFFolderWatcher
                 try
                 {
                     ci = await this._listAsyncCommands[asyncCommIndex].ReceiveAsync<CommandInfo>();
+                    Log.Information($"ci.ToString: {ci.ToString()}");
                     if (ci.CommandExe.Length > 0)
                     {
-                        ExecuteCommandLineProcess(ci.CommandExe, ci.CommandArgs);
+                        ExecuteCommandLineProcess(ci.CommandExe, ci.CommandArgs, watchedFolder.WaitForExit);
                         await Task.Delay(Convert.ToInt32(watchedFolder.ThreadGroupInterval));
                     }
                     if (!string.IsNullOrEmpty(ci.BaseURL))
                     {
-                        ExecuteWebAPI_POST(ci.BaseURL, ci.POSTParameter);
+                        ExecuteWebAPI_POST(ci.BaseURL, ci.POSTParameter, watchedFolder.WaitForExit);
                         await Task.Delay(Convert.ToInt32(watchedFolder.ThreadGroupInterval));
                     }
                 }
@@ -372,47 +384,41 @@ namespace WuFFolderWatcher
         void fileSWatch_Created(object sender, FileSystemEventArgs e,
           WatchedFolderSettings watchedFolder)
         {
-            if(!this.FileExtensionInFilter(e.FullPath, this.filters))
+            if (watchedFolder.EntityFile && !this.FileExtensionInFilter(e.FullPath, this.filters))
             {
                 return;
             }
-            //string actionToExecute = watchedFolder.ExecutableFile;        // action to execute
 
-            Interlocked.Increment(ref _counter);
-
-            string entity = GetFormatString(watchedFolder.EntityFile == true , "file" , "folder");
+            string entity = GetFormatString(watchedFolder.EntityFile == true, "file", "folder");
             string isAsync = GetFormatString(watchedFolder.RunAsync == true, "YES", "NO");
             Log.Information($"[async: {isAsync}] - New { entity } ({e.FullPath}) in folder ({Directory.GetParent(e.FullPath).FullName})");
-            //string fileName = e.FullPath;
-            
-            // Executes the command from the DOS window
-            if (!string.IsNullOrEmpty(watchedFolder.ExecutableFile))
-            {
-                CommandInfo ci = new CommandInfo(
-                                    new EventInfos
-                                    {
-                                        FileFullPath = e.FullPath,
-                                        EventType = FS_EVENT.CREATED,
-                                        OldName = "",
-                                        WatchedFolderRoot = watchedFolder.FolderPath,
-                                        Counter = _counter
-                                    },
-                                    watchedFolder);
+            Interlocked.Increment(ref _counter);
+            this.Producer(new CommandInfo(
+                                new EventInfos
+                                {
+                                    FileFullPath = e.FullPath,
+                                    EventType = FS_EVENT.CREATED,
+                                    OldName = "",
+                                    WatchedFolderRoot = watchedFolder.FolderPath,
+                                    Counter = _counter
+                                },
+                                watchedFolder), 
+                          watchedFolder.Index);
 
-                if (watchedFolder.RunAsync)
-                {
-                    this.Producer(ci, watchedFolder.Index);
-                }
-                else
-                {
-                    ExecuteCommandLineProcess(ci.CommandExe, ci.CommandArgs);
-                    if (!string.IsNullOrEmpty(ci.BaseURL))
-                    {
-                        ExecuteWebAPI_POST(ci.BaseURL, ci.POSTParameter);
-                    }
-                }
+            //if (watchedFolder.RunAsync)
+            //{
+            //    this.Producer(ci, watchedFolder.Index);
+            //}
+            //else
+            //{
+            //    ExecuteCommandLineProcess(ci.CommandExe, ci.CommandArgs);
+            //    if (!string.IsNullOrEmpty(ci.BaseURL))
+            //    {
+            //        ExecuteWebAPI_POST(ci.BaseURL, ci.POSTParameter, false);
+            //    }
+            //}
 
-            }
+
         }
 
         /// <summary>This event is triggered when a file has been renamed.</summary>
@@ -423,35 +429,30 @@ namespace WuFFolderWatcher
         void fileSWatch_Renamed(object sender, RenamedEventArgs e,
            WatchedFolderSettings watchedFolder)
         {
-            if (!this.FileExtensionInFilter(e.FullPath, this.filters))
+
+            if (watchedFolder.EntityFile && !this.FileExtensionInFilter(e.FullPath, this.filters))
             {
                 return;
             }
 
-            this.lastWrite = File.GetLastWriteTime(e.FullPath);
-            string actionToExecute = watchedFolder.ExecutableFile;        // action to execute
-
-            Log.Information(String.Format("Renamed {3} ({0}) in folder ({1}). Old name({2})", e.FullPath, Directory.GetParent(e.FullPath).FullName, e.OldName, watchedFolder.EntityFile ? "file" : "folder"));
-            string fileName = e.FullPath;
+            string entity = GetFormatString(watchedFolder.EntityFile == true, "file", "folder");
+            string isAsync = GetFormatString(watchedFolder.RunAsync == true, "YES", "NO");
+            Log.Information($"[async: {isAsync}] - Renamed { entity } ({e.FullPath}) in folder ({Directory.GetParent(e.FullPath).FullName}) Old name: {e.OldName}");
             
-            // Executes the command from the DOS window
-            if (!string.IsNullOrEmpty(actionToExecute))
-            {
-                // Adds the file name to the arguments. The filename will be placed in lieu of {0}
-                string argStr = "";
-                if (!string.IsNullOrEmpty(watchedFolder.ExecutableArguments))
-                {
-                    argStr = string.Format(watchedFolder.ExecutableArguments, fileName, "RENAMED", e.OldName, watchedFolder.FolderPath);
-                }
-                if (watchedFolder.RunAsync)
-                {
-
-                }
-                else
-                {
-                    ExecuteCommandLineProcess(actionToExecute, argStr);
-                }
-            }
+            this.lastWrite = File.GetLastWriteTime(e.FullPath);
+            Interlocked.Increment(ref _counter);
+            
+            this.Producer(new CommandInfo(
+                            new EventInfos
+                            {
+                                FileFullPath = e.FullPath,
+                                EventType = FS_EVENT.RENAMED,
+                                OldName = e.OldName,
+                                WatchedFolderRoot = watchedFolder.FolderPath,
+                                Counter = _counter
+                            },
+                            watchedFolder),
+                     watchedFolder.Index);
         }
 
         /// <summary>This event is triggered when a file has been deleted.</summary>
@@ -462,33 +463,29 @@ namespace WuFFolderWatcher
         void fileSWatch_Deleted(object sender, FileSystemEventArgs e,
             WatchedFolderSettings watchedFolder)
         {
-            if (!this.FileExtensionInFilter(e.FullPath, this.filters))
+            if (watchedFolder.EntityFile && !this.FileExtensionInFilter(e.FullPath, this.filters))
             {
                 return;
             }
-            string actionToExecute = watchedFolder.ExecutableFile;        // action to execute
+           
+            Interlocked.Increment(ref _counter);
 
-            Log.Information(String.Format("Deleted {2} ({0}) in folder ({1})", e.FullPath, Directory.GetParent(e.FullPath).FullName, watchedFolder.EntityFile ? "file" : "folder"));
-            string fileName = e.FullPath;
-            
-            // Executes the command from the DOS window
-            if (!string.IsNullOrEmpty(actionToExecute))
-            {
-                // Adds the file name to the arguments. The filename will be placed in lieu of {0}
-                string argStr = "";
-                if (!string.IsNullOrEmpty(watchedFolder.ExecutableArguments))
-                {
-                    argStr = string.Format(watchedFolder.ExecutableArguments, fileName, "DELETED", "", watchedFolder.FolderPath);
-                }
-                if (watchedFolder.RunAsync)
-                {
+            string entity = GetFormatString(watchedFolder.EntityFile == true, "file", "folder");
+            string isAsync = GetFormatString(watchedFolder.RunAsync == true, "YES", "NO");
+            Log.Information($"[async: {isAsync}] - Deleted { entity } ({e.FullPath}) in folder ({Directory.GetParent(e.FullPath).FullName})");
 
-                }
-                else
-                {
-                    ExecuteCommandLineProcess(actionToExecute, argStr);
-                }
-            }
+            this.Producer(new CommandInfo(
+                               new EventInfos
+                               {
+                                   FileFullPath = e.FullPath,
+                                   EventType = FS_EVENT.DELETED,
+                                   OldName = "",
+                                   WatchedFolderRoot = watchedFolder.FolderPath,
+                                   Counter = _counter
+                               },
+                               watchedFolder),
+                        watchedFolder.Index);
+
         }
 
         /// <summary>This event is triggered when a file has been modified.</summary>
@@ -499,43 +496,42 @@ namespace WuFFolderWatcher
         void fileSWatch_Changed(object sender, FileSystemEventArgs e,
           WatchedFolderSettings watchedFolder)
         {
-            if (!this.FileExtensionInFilter(e.FullPath, this.filters))
+            if (watchedFolder.EntityFile && !this.FileExtensionInFilter(e.FullPath, this.filters))
             {
                 return;
             }
             this.lastWrite = File.GetLastWriteTime(e.FullPath);
-            string actionToExecute = watchedFolder.ExecutableFile;        // action to execute
+          
+            Interlocked.Increment(ref _counter);
 
-            Log.Information(String.Format("Modified {2} ({0}) in folder ({1})",  e.FullPath, Directory.GetParent(e.FullPath).FullName, watchedFolder.EntityFile ? "file" : "folder"));
-           
-            string fileName = e.FullPath;
-            
-            // Executes the command from the DOS window
-            if (!string.IsNullOrEmpty(actionToExecute))
-            {
-                // Adds the file name to the arguments. The filename will be placed in lieu of {0}
-                string argStr = "";
-                if (!string.IsNullOrEmpty(watchedFolder.ExecutableArguments))
-                {
-                    argStr = string.Format(watchedFolder.ExecutableArguments, fileName, "MODIFIED", "", watchedFolder.FolderPath);
-                }
+            string entity = GetFormatString(watchedFolder.EntityFile == true, "file", "folder");
+            string isAsync = GetFormatString(watchedFolder.RunAsync == true, "YES", "NO");
+            Log.Information($"[async: {isAsync}] - Modified { entity } ({e.FullPath}) in folder ({Directory.GetParent(e.FullPath).FullName})");
 
-                if (watchedFolder.RunAsync)
-                {
+            this.Producer(new CommandInfo(
+                                new EventInfos
+                                {
+                                    FileFullPath = e.FullPath,
+                                    EventType = FS_EVENT.MODIFIED,
+                                    OldName = "",
+                                    WatchedFolderRoot = watchedFolder.FolderPath,
+                                    Counter = _counter
+                                },
+                                watchedFolder), 
+                          watchedFolder.Index);
 
-                }
-                else
-                {
-                    ExecuteCommandLineProcess(actionToExecute, argStr);
-                }
-            }
         }
 
         /// <summary>Executes a set of instructions through the command window</summary>
         /// <param name="executableFile">Name of the executable file or program</param>
         /// <param name="argumentList">List of arguments</param>
-        private void ExecuteCommandLineProcess(string executableFile, string argumentList)
+        private void ExecuteCommandLineProcess(string executableFile, string argumentList, bool waitForExit)
         {
+            if (string.IsNullOrEmpty(executableFile))
+            {
+                return;
+            }
+
             // Use ProcessStartInfo class
             ProcessStartInfo startInfo = new ProcessStartInfo();
             startInfo.CreateNoWindow = true;
@@ -549,13 +545,19 @@ namespace WuFFolderWatcher
                 // Call WaitForExit and then the using-statement will close
                 using (Process exeProcess = Process.Start(startInfo))
                 {
-                    exeProcess.WaitForExit();
+                    if (waitForExit)
+                    {
+                        exeProcess.WaitForExit();
+                        Log.Information($"Exit code: { exeProcess.ExitCode }");
+                    }
+                        
 
                     // Register a log of the successful operation
-                    Log.Information(string.Format(
-                      "Succesful operation (Background thread:{2}, Poolthread: {3}) --> Executable: {0} --> Arguments: {1}",
-                      executableFile, argumentList, Thread.CurrentThread.IsBackground, Thread.CurrentThread.IsThreadPoolThread));
-                    Log.Information($"Exit code: { exeProcess.ExitCode }");
+                    Log.Information($"Succesful operation (Background thread:{Thread.CurrentThread.IsBackground}, Poolthread: {Thread.CurrentThread.IsThreadPoolThread}).");
+                    Log.Information($"Thread ID:[{Thread.CurrentThread.ManagedThreadId}]");
+                    Log.Information($"Executable: {executableFile} --> Arguments: {argumentList}");
+                    Log.Information($"Wait for exit: { waitForExit }");
+                    Log.Information("");
                 }
             }
             catch (Exception exc)
@@ -565,11 +567,42 @@ namespace WuFFolderWatcher
             }
         }
 
-        private void ExecuteWebAPI_POST(string baseURL, object POSTParam)
+        private void ExecuteWebAPI_POST(string baseURL, string POSTParam, bool waitForExit)
         {
-            Log.Information($"Executing POST to {baseURL}");
-            Log.Information($"TypeNAme of PARAM {POSTParam.GetType().Name}");
-            Log.Information($"PARAM {POSTParam.ToString().Replace(@"\", @"\\")}");
+            try
+            {
+                Log.Information($"Executing POST to {baseURL}, wait for exit {waitForExit}");
+                Log.Information($"PARAM {POSTParam}");
+                object cnvrtd = JsonConvert.DeserializeObject(JsonConvert.ToString(POSTParam)) ;
+
+                using (var client = new WebClient())
+                {
+                    client.Headers.Add(HttpRequestHeader.ContentType, "application/json");
+                    //client.Headers.Add(HttpRequestHeader.Authorization, "Basic WmVuaXQubG9jYWxcV2luZHJlYW06d2RAZG0xbis=");
+                    if (!waitForExit)
+                    {
+                        client.UploadStringAsync(new Uri(baseURL), "POST", cnvrtd.ToString().Replace(@"\", @"\\"));
+                    }
+                    else
+                    {
+
+                        string res = client.UploadString(new Uri(baseURL), "POST", cnvrtd.ToString().Replace(@"\", @"\\"));
+                        //string res = client.UploadString(new Uri(baseURL), "POST", JsonConvert.ToString(cnvrtd.ToString()));
+                        Log.Information($"SYNCHRON POST REQUEST. RESULT: {res}");
+                    }
+
+                    Log.Information($"Succesful operation (Background thread:{Thread.CurrentThread.IsBackground}, Poolthread: {Thread.CurrentThread.IsThreadPoolThread}).");
+                    Log.Information($"Thread ID:[{Thread.CurrentThread.ManagedThreadId}]");
+                    Log.Information($"Wait for exit: { waitForExit }");
+                    Log.Information("");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Log.Error($"{nameof(ExecuteWebAPI_POST)} - {ex.Message}");
+            }
+          
         }
     }
 }

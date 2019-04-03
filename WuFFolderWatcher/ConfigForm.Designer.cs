@@ -68,13 +68,14 @@
             this.label6 = new System.Windows.Forms.Label();
             this.checkBoxLogErrorOnly = new System.Windows.Forms.CheckBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.tabWebAPI = new System.Windows.Forms.TabPage();
             this.tbPOSTParameter = new System.Windows.Forms.TextBox();
-            this.lblPOST = new System.Windows.Forms.Label();
             this.tbBaseURL = new System.Windows.Forms.TextBox();
+            this.tabWebAPI = new System.Windows.Forms.TabPage();
+            this.lblPOST = new System.Windows.Forms.Label();
             this.lblBaseURL = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabExecutable = new System.Windows.Forms.TabPage();
+            this.cbWaitToReturn = new System.Windows.Forms.CheckBox();
             this.groupBoxWatchFolders.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridWatchedFolders)).BeginInit();
             this.groupBoxEventsAndOptions.SuspendLayout();
@@ -318,7 +319,7 @@
             this.groupSynchronisation.Size = new System.Drawing.Size(314, 89);
             this.groupSynchronisation.TabIndex = 5;
             this.groupSynchronisation.TabStop = false;
-            this.groupSynchronisation.Text = "Synchronisation";
+            this.groupSynchronisation.Text = "Threads";
             // 
             // lblThreadCount
             // 
@@ -374,11 +375,11 @@
             // cbRunAsync
             // 
             this.cbRunAsync.AutoSize = true;
-            this.cbRunAsync.Location = new System.Drawing.Point(460, 449);
+            this.cbRunAsync.Location = new System.Drawing.Point(461, 452);
             this.cbRunAsync.Name = "cbRunAsync";
-            this.cbRunAsync.Size = new System.Drawing.Size(139, 19);
+            this.cbRunAsync.Size = new System.Drawing.Size(105, 19);
             this.cbRunAsync.TabIndex = 5;
-            this.cbRunAsync.Text = "Run asynchronously";
+            this.cbRunAsync.Text = "Multithreaded";
             this.toolTip1.SetToolTip(this.cbRunAsync, "The process that will be invoked on these event will run asynchronously in a dedi" +
         "cated thread");
             this.cbRunAsync.UseVisualStyleBackColor = true;
@@ -484,6 +485,24 @@
             this.checkBoxLogErrorOnly.UseVisualStyleBackColor = true;
             this.checkBoxLogErrorOnly.CheckedChanged += new System.EventHandler(this.checkBoxLogErrorOnly_CheckedChanged);
             // 
+            // tbPOSTParameter
+            // 
+            this.tbPOSTParameter.Location = new System.Drawing.Point(3, 63);
+            this.tbPOSTParameter.Multiline = true;
+            this.tbPOSTParameter.Name = "tbPOSTParameter";
+            this.tbPOSTParameter.Size = new System.Drawing.Size(296, 45);
+            this.tbPOSTParameter.TabIndex = 3;
+            this.toolTip1.SetToolTip(this.tbPOSTParameter, "JSON object that will be POSTed to the Web Endpoint");
+            // 
+            // tbBaseURL
+            // 
+            this.tbBaseURL.Location = new System.Drawing.Point(4, 22);
+            this.tbBaseURL.Name = "tbBaseURL";
+            this.tbBaseURL.Size = new System.Drawing.Size(295, 20);
+            this.tbBaseURL.TabIndex = 1;
+            this.toolTip1.SetToolTip(this.tbBaseURL, "This Web API endpoint will be informed(per POST only) about the events of the Fil" +
+        "eSystemWatcher");
+            // 
             // tabWebAPI
             // 
             this.tabWebAPI.Controls.Add(this.tbPOSTParameter);
@@ -498,15 +517,6 @@
             this.tabWebAPI.Text = "Web API";
             this.tabWebAPI.UseVisualStyleBackColor = true;
             // 
-            // tbPOSTParameter
-            // 
-            this.tbPOSTParameter.Location = new System.Drawing.Point(3, 63);
-            this.tbPOSTParameter.Multiline = true;
-            this.tbPOSTParameter.Name = "tbPOSTParameter";
-            this.tbPOSTParameter.Size = new System.Drawing.Size(296, 45);
-            this.tbPOSTParameter.TabIndex = 3;
-            this.toolTip1.SetToolTip(this.tbPOSTParameter, "JSON object that will be POSTed to the Web Endpoint");
-            // 
             // lblPOST
             // 
             this.lblPOST.AutoSize = true;
@@ -515,15 +525,6 @@
             this.lblPOST.Size = new System.Drawing.Size(100, 15);
             this.lblPOST.TabIndex = 2;
             this.lblPOST.Text = "POST Parameter";
-            // 
-            // tbBaseURL
-            // 
-            this.tbBaseURL.Location = new System.Drawing.Point(4, 22);
-            this.tbBaseURL.Name = "tbBaseURL";
-            this.tbBaseURL.Size = new System.Drawing.Size(295, 20);
-            this.tbBaseURL.TabIndex = 1;
-            this.toolTip1.SetToolTip(this.tbBaseURL, "This Web API endpoint will be informed(per POST only) about the events of the Fil" +
-        "eSystemWatcher");
             // 
             // lblBaseURL
             // 
@@ -559,12 +560,24 @@
             this.tabExecutable.Text = "Executable";
             this.tabExecutable.UseVisualStyleBackColor = true;
             // 
+            // cbWaitToReturn
+            // 
+            this.cbWaitToReturn.AutoSize = true;
+            this.cbWaitToReturn.Location = new System.Drawing.Point(682, 452);
+            this.cbWaitToReturn.Name = "cbWaitToReturn";
+            this.cbWaitToReturn.Size = new System.Drawing.Size(92, 19);
+            this.cbWaitToReturn.TabIndex = 12;
+            this.cbWaitToReturn.Text = "Wait for exit";
+            this.toolTip1.SetToolTip(this.cbWaitToReturn, "if checked, the execution will wait for the started process to return");
+            this.cbWaitToReturn.UseVisualStyleBackColor = true;
+            // 
             // ConfigForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoValidate = System.Windows.Forms.AutoValidate.Disable;
             this.ClientSize = new System.Drawing.Size(791, 636);
+            this.Controls.Add(this.cbWaitToReturn);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.checkBoxLogErrorOnly);
             this.Controls.Add(this.cbRunAsync);
@@ -650,5 +663,6 @@
         private System.Windows.Forms.Label lblPOST;
         private System.Windows.Forms.TextBox tbBaseURL;
         private System.Windows.Forms.Label lblBaseURL;
+        private System.Windows.Forms.CheckBox cbWaitToReturn;
     }
 }

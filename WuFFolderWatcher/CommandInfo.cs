@@ -38,7 +38,7 @@ namespace WuFFolderWatcher
         public string CommandExe { get; set; }
         public string CommandArgs { get; set; }
         public string BaseURL { get; set; }
-        public object POSTParameter { get; set; }
+        public string POSTParameter { get; set; }
 
         public override string ToString() => $"{CommandExe} {CommandArgs}";
     }
@@ -49,6 +49,8 @@ namespace WuFFolderWatcher
         public FS_EVENT EventType { get; set; }
         public string OldName { get; set; }
         public string WatchedFolderRoot { get; set; }
-        public int Counter { get; set; }
+        public long Counter { get; set; }
     }
+
+    
 }

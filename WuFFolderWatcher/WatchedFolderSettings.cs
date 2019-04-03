@@ -60,6 +60,9 @@ namespace WuFFolderWatcher
         /// <summary>If TRUE: the proces will be started asynchronously </summary>
         [XmlElement]
         public bool RunAsync { get; set; }
+        /// <summary>If TRUE: the proces will be waited to exit </summary>
+        [XmlElement]
+        public bool WaitForExit { get; set; }
         /// <summary>If set the thread groups will be run in thi interval
         [XmlElement]
         public string ThreadGroupInterval { get; set; }

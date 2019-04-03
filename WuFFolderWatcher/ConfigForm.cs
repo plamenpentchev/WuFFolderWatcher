@@ -69,11 +69,13 @@ namespace WuFFolderWatcher
                 this.textBoxExecutable.Text = settings.ExecutableFile;
                 this.textBoxExecutableArguments.Text = settings.ExecutableArguments;
                 this.cbRunAsync.Checked = settings.RunAsync;
+                this.cbWaitToReturn.Checked = settings.WaitForExit;
                 this.tbGroupIntervalTime.Text = settings.ThreadGroupInterval.ToString();
                 this.cbThreadCount.Text = settings.ThreadCount.ToString();
                 this.tbBaseURL.Text = settings.BaseURL;
                 this.tbPOSTParameter.Text = settings.POSTParam;
                 this.groupSynchronisation.Enabled = this.cbRunAsync.Checked;
+                
             }
             else
             {
@@ -89,6 +91,7 @@ namespace WuFFolderWatcher
                 this.textBoxExecutable.Text = string.Empty;
                 this.textBoxExecutableArguments.Text = string.Empty;
                 this.cbRunAsync.Checked = false;
+                this.cbWaitToReturn.Checked = false;
                 this.tbGroupIntervalTime.Text = string.Empty;
                 this.tbBaseURL.Text = string.Empty;
                 this.tbPOSTParameter.Text = string.Empty;
@@ -112,6 +115,7 @@ namespace WuFFolderWatcher
                 settings.ExecutableFile = this.textBoxExecutable.Text;
                 settings.ExecutableArguments = this.textBoxExecutableArguments.Text;
                 settings.RunAsync = this.cbRunAsync.Checked;
+                settings.WaitForExit = this.cbWaitToReturn.Checked;
                 settings.ThreadGroupInterval = this.tbGroupIntervalTime.Text;
                 settings.ThreadCount = this.cbThreadCount.Text;
                 settings.BaseURL = this.tbBaseURL.Text;
