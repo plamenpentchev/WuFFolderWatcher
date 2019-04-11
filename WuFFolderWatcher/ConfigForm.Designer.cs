@@ -70,12 +70,12 @@
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.tbPOSTParameter = new System.Windows.Forms.TextBox();
             this.tbBaseURL = new System.Windows.Forms.TextBox();
+            this.cbWaitToReturn = new System.Windows.Forms.CheckBox();
             this.tabWebAPI = new System.Windows.Forms.TabPage();
             this.lblPOST = new System.Windows.Forms.Label();
             this.lblBaseURL = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabExecutable = new System.Windows.Forms.TabPage();
-            this.cbWaitToReturn = new System.Windows.Forms.CheckBox();
             this.groupBoxWatchFolders.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridWatchedFolders)).BeginInit();
             this.groupBoxEventsAndOptions.SuspendLayout();
@@ -164,7 +164,7 @@
             this.radButFolders.AutoSize = true;
             this.radButFolders.Location = new System.Drawing.Point(191, 22);
             this.radButFolders.Name = "radButFolders";
-            this.radButFolders.Size = new System.Drawing.Size(63, 19);
+            this.radButFolders.Size = new System.Drawing.Size(54, 17);
             this.radButFolders.TabIndex = 9;
             this.radButFolders.TabStop = true;
             this.radButFolders.Text = "Folder";
@@ -177,7 +177,7 @@
             this.radButFiles.AutoSize = true;
             this.radButFiles.Location = new System.Drawing.Point(79, 22);
             this.radButFiles.Name = "radButFiles";
-            this.radButFiles.Size = new System.Drawing.Size(54, 19);
+            this.radButFiles.Size = new System.Drawing.Size(46, 17);
             this.radButFiles.TabIndex = 8;
             this.radButFiles.TabStop = true;
             this.radButFiles.Text = "Files";
@@ -190,7 +190,7 @@
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(13, 24);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(53, 15);
+            this.label7.Size = new System.Drawing.Size(47, 13);
             this.label7.TabIndex = 7;
             this.label7.Text = "Entitties:";
             // 
@@ -199,7 +199,7 @@
             this.checkBoxIncludeSubFolders.AutoSize = true;
             this.checkBoxIncludeSubFolders.Location = new System.Drawing.Point(79, 135);
             this.checkBoxIncludeSubFolders.Name = "checkBoxIncludeSubFolders";
-            this.checkBoxIncludeSubFolders.Size = new System.Drawing.Size(139, 19);
+            this.checkBoxIncludeSubFolders.Size = new System.Drawing.Size(120, 17);
             this.checkBoxIncludeSubFolders.TabIndex = 6;
             this.checkBoxIncludeSubFolders.Text = "Include Sub-Folders";
             this.toolTip1.SetToolTip(this.checkBoxIncludeSubFolders, "Sub-folders will be observed as well.");
@@ -210,7 +210,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(14, 135);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(55, 15);
+            this.label2.Size = new System.Drawing.Size(49, 13);
             this.label2.TabIndex = 5;
             this.label2.Text = "Options: ";
             // 
@@ -219,7 +219,7 @@
             this.checkBoxRenameFiles.AutoSize = true;
             this.checkBoxRenameFiles.Location = new System.Drawing.Point(79, 102);
             this.checkBoxRenameFiles.Name = "checkBoxRenameFiles";
-            this.checkBoxRenameFiles.Size = new System.Drawing.Size(84, 19);
+            this.checkBoxRenameFiles.Size = new System.Drawing.Size(72, 17);
             this.checkBoxRenameFiles.TabIndex = 4;
             this.checkBoxRenameFiles.Text = "Renamed";
             this.toolTip1.SetToolTip(this.checkBoxRenameFiles, "Watch for renamed files only.");
@@ -230,7 +230,7 @@
             this.checkBoxDeleteFile.AutoSize = true;
             this.checkBoxDeleteFile.Location = new System.Drawing.Point(191, 102);
             this.checkBoxDeleteFile.Name = "checkBoxDeleteFile";
-            this.checkBoxDeleteFile.Size = new System.Drawing.Size(72, 19);
+            this.checkBoxDeleteFile.Size = new System.Drawing.Size(63, 17);
             this.checkBoxDeleteFile.TabIndex = 3;
             this.checkBoxDeleteFile.Text = "Deleted";
             this.toolTip1.SetToolTip(this.checkBoxDeleteFile, "Watch if any files in this folders has been deleted.");
@@ -242,7 +242,7 @@
             this.checkBoxModifyFiles.AutoSize = true;
             this.checkBoxModifyFiles.Location = new System.Drawing.Point(190, 67);
             this.checkBoxModifyFiles.Name = "checkBoxModifyFiles";
-            this.checkBoxModifyFiles.Size = new System.Drawing.Size(77, 19);
+            this.checkBoxModifyFiles.Size = new System.Drawing.Size(66, 17);
             this.checkBoxModifyFiles.TabIndex = 2;
             this.checkBoxModifyFiles.Text = "Modified";
             this.toolTip1.SetToolTip(this.checkBoxModifyFiles, "Watch for modifed files only. Modification implies name,extension and content mod" +
@@ -254,7 +254,7 @@
             this.checkBoxNewFiles.AutoSize = true;
             this.checkBoxNewFiles.Location = new System.Drawing.Point(79, 67);
             this.checkBoxNewFiles.Name = "checkBoxNewFiles";
-            this.checkBoxNewFiles.Size = new System.Drawing.Size(72, 19);
+            this.checkBoxNewFiles.Size = new System.Drawing.Size(63, 17);
             this.checkBoxNewFiles.TabIndex = 1;
             this.checkBoxNewFiles.Text = "Created";
             this.toolTip1.SetToolTip(this.checkBoxNewFiles, "Watch for new files only.");
@@ -265,7 +265,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(14, 67);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(49, 15);
+            this.label1.Size = new System.Drawing.Size(46, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "Events: ";
             // 
@@ -326,7 +326,7 @@
             this.lblThreadCount.AutoSize = true;
             this.lblThreadCount.Location = new System.Drawing.Point(90, 23);
             this.lblThreadCount.Name = "lblThreadCount";
-            this.lblThreadCount.Size = new System.Drawing.Size(79, 15);
+            this.lblThreadCount.Size = new System.Drawing.Size(71, 13);
             this.lblThreadCount.TabIndex = 9;
             this.lblThreadCount.Text = "Thread count";
             // 
@@ -368,7 +368,7 @@
             this.label8.AutoSize = true;
             this.label8.Location = new System.Drawing.Point(90, 60);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(111, 15);
+            this.label8.Size = new System.Drawing.Size(94, 13);
             this.label8.TabIndex = 6;
             this.label8.Text = "Time intervall (ms.)";
             // 
@@ -377,7 +377,7 @@
             this.cbRunAsync.AutoSize = true;
             this.cbRunAsync.Location = new System.Drawing.Point(461, 452);
             this.cbRunAsync.Name = "cbRunAsync";
-            this.cbRunAsync.Size = new System.Drawing.Size(105, 19);
+            this.cbRunAsync.Size = new System.Drawing.Size(90, 17);
             this.cbRunAsync.TabIndex = 5;
             this.cbRunAsync.Text = "Multithreaded";
             this.toolTip1.SetToolTip(this.cbRunAsync, "The process that will be invoked on these event will run asynchronously in a dedi" +
@@ -390,7 +390,7 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(6, 41);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(66, 15);
+            this.label4.Size = new System.Drawing.Size(57, 13);
             this.label4.TabIndex = 4;
             this.label4.Text = "Arguments";
             // 
@@ -399,7 +399,7 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(3, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(32, 15);
+            this.label3.Size = new System.Drawing.Size(29, 13);
             this.label3.TabIndex = 3;
             this.label3.Text = "Path";
             // 
@@ -461,7 +461,7 @@
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(461, 603);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(79, 15);
+            this.label5.Size = new System.Drawing.Size(72, 13);
             this.label5.TabIndex = 7;
             this.label5.Text = "Service state:";
             // 
@@ -470,7 +470,7 @@
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(545, 604);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(0, 15);
+            this.label6.Size = new System.Drawing.Size(0, 13);
             this.label6.TabIndex = 8;
             // 
             // checkBoxLogErrorOnly
@@ -478,7 +478,7 @@
             this.checkBoxLogErrorOnly.AutoSize = true;
             this.checkBoxLogErrorOnly.Location = new System.Drawing.Point(461, 581);
             this.checkBoxLogErrorOnly.Name = "checkBoxLogErrorOnly";
-            this.checkBoxLogErrorOnly.Size = new System.Drawing.Size(106, 19);
+            this.checkBoxLogErrorOnly.Size = new System.Drawing.Size(91, 17);
             this.checkBoxLogErrorOnly.TabIndex = 10;
             this.checkBoxLogErrorOnly.Text = "log errors only";
             this.toolTip1.SetToolTip(this.checkBoxLogErrorOnly, "Will log errors only, verbose mode otherwise.");
@@ -503,6 +503,17 @@
             this.toolTip1.SetToolTip(this.tbBaseURL, "This Web API endpoint will be informed(per POST only) about the events of the Fil" +
         "eSystemWatcher");
             // 
+            // cbWaitToReturn
+            // 
+            this.cbWaitToReturn.AutoSize = true;
+            this.cbWaitToReturn.Location = new System.Drawing.Point(682, 452);
+            this.cbWaitToReturn.Name = "cbWaitToReturn";
+            this.cbWaitToReturn.Size = new System.Drawing.Size(82, 17);
+            this.cbWaitToReturn.TabIndex = 12;
+            this.cbWaitToReturn.Text = "Wait for exit";
+            this.toolTip1.SetToolTip(this.cbWaitToReturn, "if checked, the execution will wait for the started process to return");
+            this.cbWaitToReturn.UseVisualStyleBackColor = true;
+            // 
             // tabWebAPI
             // 
             this.tabWebAPI.Controls.Add(this.tbPOSTParameter);
@@ -522,7 +533,7 @@
             this.lblPOST.AutoSize = true;
             this.lblPOST.Location = new System.Drawing.Point(3, 45);
             this.lblPOST.Name = "lblPOST";
-            this.lblPOST.Size = new System.Drawing.Size(100, 15);
+            this.lblPOST.Size = new System.Drawing.Size(87, 13);
             this.lblPOST.TabIndex = 2;
             this.lblPOST.Text = "POST Parameter";
             // 
@@ -531,7 +542,7 @@
             this.lblBaseURL.AutoSize = true;
             this.lblBaseURL.Location = new System.Drawing.Point(2, 3);
             this.lblBaseURL.Name = "lblBaseURL";
-            this.lblBaseURL.Size = new System.Drawing.Size(63, 15);
+            this.lblBaseURL.Size = new System.Drawing.Size(56, 13);
             this.lblBaseURL.TabIndex = 0;
             this.lblBaseURL.Text = "Base URL";
             // 
@@ -560,23 +571,12 @@
             this.tabExecutable.Text = "Executable";
             this.tabExecutable.UseVisualStyleBackColor = true;
             // 
-            // cbWaitToReturn
-            // 
-            this.cbWaitToReturn.AutoSize = true;
-            this.cbWaitToReturn.Location = new System.Drawing.Point(682, 452);
-            this.cbWaitToReturn.Name = "cbWaitToReturn";
-            this.cbWaitToReturn.Size = new System.Drawing.Size(92, 19);
-            this.cbWaitToReturn.TabIndex = 12;
-            this.cbWaitToReturn.Text = "Wait for exit";
-            this.toolTip1.SetToolTip(this.cbWaitToReturn, "if checked, the execution will wait for the started process to return");
-            this.cbWaitToReturn.UseVisualStyleBackColor = true;
-            // 
             // ConfigForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoValidate = System.Windows.Forms.AutoValidate.Disable;
-            this.ClientSize = new System.Drawing.Size(791, 636);
+            this.ClientSize = new System.Drawing.Size(793, 644);
             this.Controls.Add(this.cbWaitToReturn);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.checkBoxLogErrorOnly);

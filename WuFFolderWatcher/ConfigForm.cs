@@ -392,6 +392,7 @@ namespace WuFFolderWatcher
         {
             if (this.selectedIdx < this.watchedFoldersSettings.Count)
                 this.watchedFoldersSettings.RemoveAt(this.selectedIdx);
+
             if (this.selectedIdx < this.bindList.Count)
                 this.bindList.RemoveAt(this.selectedIdx);
 

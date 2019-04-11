@@ -120,9 +120,6 @@
   <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>361, 17</value>
   </metadata>
-  <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>361, 17</value>
-  </metadata>
   <data name="dataGridWatchedFolders.ToolTip" xml:space="preserve">
     <value>This is a collection of all available profiles. You can add new and delete existing profiles.
 'FolderID' stays for the profile's name and 'FolderEnabled' says if the profile will be considered for execution or not.</value>

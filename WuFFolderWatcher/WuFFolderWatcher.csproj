@@ -166,7 +166,7 @@
   <PropertyGroup>
     <PostBuildEvent>copy /Y "$(ProjectDir)Install.bat" "$(TargetDir)Install.bat"
 copy /Y "$(ProjectDir)Uninstall.bat" "$(TargetDir)Uninstall.bat"
-copy /Y "$(ProjectDir)WatchedFolder.xml" "$(TargetDir)WatchedFoldersSettings.xml"
+if not exist  "$(TargetDir)WatchedFoldersSettings.xml" copy /Y "$(ProjectDir)WatchedFolder.xml" "$(TargetDir)WatchedFoldersSettings.xml"
 if not exist $(TargetDir)\logs mkdir $(TargetDir)\logs</PostBuildEvent>
   </PropertyGroup>
 </Project>

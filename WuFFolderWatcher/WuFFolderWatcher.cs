@@ -161,6 +161,7 @@ namespace WuFFolderWatcher
             foreach (WatchedFolderSettings watchedFolder in listFolders)
             {
                 DirectoryInfo dir = new DirectoryInfo(watchedFolder.FolderPath);
+                Log.Information($"Location [{watchedFolder.FolderPath}] exists [{dir.Exists}]");
                 // Checks whether the folder is enabled and
                 // also the directory is a valid location
                 if (watchedFolder.FolderEnabled && dir.Exists)
